@@ -1,7 +1,7 @@
 const Article = require('../models').Article;
 
 module.exports = {
-    createGet: (req, res) => {
+    createGet:(req, res) => {
         res.render('article/create');
     },
 
@@ -30,7 +30,7 @@ module.exports = {
             console.log(err.message);
             res.render('article/create', {error: er.message});
         });
-    }
+    },
 
     details: (req, res) => {
         let id = req.params.id;
