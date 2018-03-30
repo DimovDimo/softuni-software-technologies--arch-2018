@@ -28,7 +28,7 @@ module.exports = {
             res.redirect('/');
         }).catch(err => {
             console.log(err.message);
-            res.render('article/create', {error: er.message});
+            res.render('article/create', {error: err.message});
         });
     },
 
