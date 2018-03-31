@@ -21,8 +21,42 @@ class CalculatorController extends Controller
      */
     public function index(Request $request)
     {
-        // TODO add $form and calculation logic;
+        $calculator = new Calculator();
 
-        return $this->render('calculator/index.html.twig');
+        $form = $this->createForm(CalculatorType::class, $calculator);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $leftOperand = $calculator->getLeftOperand();
+            $rightOperand = $calculator->getRightOperand();
+            $operator = $calculator->getOperator();
+
+            $result = 0;
+
+            switch ($operator){
+                case '+':
+                    $result = $leftOperand + $rightOperand;
+                    break;
+                case '-':
+                    $result = $leftOperand - $rightOperand;
+                    break;
+                case '*':
+                    $result = $leftOperand * $rightOperand;
+                    break;
+                case '/':
+                    $result = $leftOperand / $rightOperand;
+                    break;
+                case '^':
+                    $result = $leftOperand ^ $rightOperand;
+                    break;
+            }
+
+            return $this->render('calculator/index.html.twig',
+                ['result' => $result, 'calculator' => $calculator, 'form' => $form->createView()]);
+        }
+
+        return $this->render('calculator/index',
+            ['form' => $form->createView()]);
     }
 }
