@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
-public class CompareCharArrays {
+public class p06_CompareCharArrays {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         char[] first = scanner
