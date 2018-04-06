@@ -4,6 +4,9 @@ namespace SoftUniBlogBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -44,11 +47,14 @@ class User implements UserInterface
      */
     private $password;
 
-
-    public function __construct()
-    {
-
-    }
+    /**
+     * @var ArrayCollection
+     *
+     * @ManyToMany(targetEntity="SoftUniBlogBundle\Entity\Role")
+     * @JoinTable(name="users_roles", joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")}, inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id")})
+     *
+     */
+    private $roles;
 
 
     /**
@@ -151,7 +157,13 @@ class User implements UserInterface
      */
     public function getRoles()
     {
-        return ['ROLE_USER'];
+        $stringRoles=[];
+        foreach ($this->roles as $role)
+        {
+            /** @var $role Role */
+            $stringRoles[] = $role->getRole();
+        }
+        return $stringRoles;
     }
 
     /**
@@ -187,10 +199,45 @@ class User implements UserInterface
         // TODO: Implement eraseCredentials() method.
     }
 
-    function __toString()
+    /**
+     * @param \SoftUniBlogBundle\Entity\Role $role
+     *
+     * @return User
+     */
+    public function addRole(Role $role)
+    {
+        $this->roles[] = $role;
+
+        return $this;
+    }
+
+    /**
+     * @param Article $article
+     * @return bool
+     */
+    public function isAuthor(Article $article)
+    {
+        return $article->getAuthorId() == $this->getId();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return in_array("ROLE_ADMIN", $this->getRoles());
+    }
+
+	function __toString()
     {
         return $this->fullName;
     }
 
+    public function __construct()
+    {
+        $this->articles = new ArrayCollection();
+        $this->roles = new ArrayCollection();
+        $this->dateAdded = new \DateTime('now');
+    }
 }
 
