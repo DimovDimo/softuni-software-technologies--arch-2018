@@ -1,2 +1,2 @@
-# softuni-software-technologies-march-2018
-Homework from Software Technologies - March 2018
+# Softuni Software Technologies - March 2018
+Homeworks from Software Technologies - March 2018
